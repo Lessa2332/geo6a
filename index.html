@@ -160,7 +160,7 @@
             border-color: var(--primary);
         }
 
-        /* Великі Touch-кнопки (Зручно для пальців на сенсорному моніторі) */
+        /* Великі Touch-кнопки */
         .btn {
             width: 100%;
             height: var(--touch-target);
@@ -278,7 +278,6 @@
             font-weight: 800;
         }
 
-        /* Анімаційний таймер зворотного звіту всередині картки */
         .live-timer {
             font-size: 0.85rem;
             color: var(--text-muted);
@@ -311,7 +310,7 @@
                     <input type="text" class="ans-field-1" data-ans="так" placeholder="Твоя відповідь...">
                 </div>
                 <div class="quest-item">
-                    <p>2. Чи є Земля єдиною відомою планетою з життям? (так/ні)</p>
+                    <p>2. Чи є Земля єдиною відомую планетою з життям? (так/ні)</p>
                     <input type="text" class="ans-field-1" data-ans="так" placeholder="Твоя відповідь...">
                 </div>
                 <div class="quest-item">
@@ -338,7 +337,7 @@
                     <input type="text" class="ans-field-2" data-ans="так" placeholder="Твоя відповідь...">
                 </div>
                 <div class="quest-item">
-                    <p>2. Чи є Земля єдиною відомою планетою з життям? (так/ні)</p>
+                    <p>2. Чи є Земля єдиною відомую планетою з життям? (так/ні)</p>
                     <input type="text" class="ans-field-2" data-ans="так" placeholder="Твоя відповідь...">
                 </div>
                 <div class="quest-item">
@@ -365,7 +364,7 @@
                     <input type="text" class="ans-field-3" data-ans="так" placeholder="Твоя відповідь...">
                 </div>
                 <div class="quest-item">
-                    <p>2. Чи є Земля єдиною відомою планетою з життям? (так/ні)</p>
+                    <p>2. Чи є Земля єдиною відомую планетою з життям? (так/ні)</p>
                     <input type="text" class="ans-field-3" data-ans="так" placeholder="Твоя відповідь...">
                 </div>
                 <div class="quest-item">
@@ -380,7 +379,7 @@
         </div>
     </div>
 
-    <button class="btn btn-success" style="margin-top: 32px; max-width: 400px; height: 60px; font-size: 1.2rem; background-color: #1e293b;" onclick="showFinalResults()">🏆 ПІДБИТИ ПІДСУМКИ КВЕСТУ</button>
+    <button class="btn" style="margin-top: 32px; max-width: 400px; height: 60px; font-size: 1.2rem; background-color: #1e293b;" onclick="showFinalResults()">🏆 ПІДБИТИ ПІДСУМКИ КВЕСТУ</button>
 
     <div id="resultsBoard" class="hidden">
         <h2>🏆 П'єдестал Переможців Квесту</h2>
@@ -393,7 +392,6 @@
         let finalResults = [];
         let teamNames = {};
 
-        // Старт квесту для окремої команди
         function startTeamQuest(id) {
             let nameInput = document.getElementById(`name-${id}`);
             let name = nameInput.value.trim();
@@ -406,25 +404,21 @@
             teamNames[id] = name;
             startTime[id] = Date.now();
             
-            // Ховаємо стартову назву, показуємо квест
             document.getElementById(`setup-${id}`).classList.add('hidden');
             document.getElementById(`quest-${id}`).classList.remove('hidden');
             document.getElementById(`box-${id}`).classList.add('active-running');
 
-            // Запускаємо візуальний таймер для дітей
             timers[id] = setInterval(() => {
                 let elapsed = (Date.now() - startTime[id]) / 1000;
                 document.getElementById(`timer-display-${id}`).textContent = `Час: ${elapsed.toFixed(1)} сек`;
             }, 100);
         }
 
-        // Фініш команди
         function finishTeamQuest(id) {
-            clearInterval(timers[id]); // Зупиняємо лічильник
+            clearInterval(timers[id]); 
             let endTime = Date.now();
             let duration = (endTime - startTime[id]) / 1000;
 
-            // Таргетований збір інпутів виключно цієї команди
             let inputs = document.querySelectorAll(`.ans-field-${id}`);
             let score = 0;
 
@@ -434,7 +428,6 @@
                 }
             });
 
-            // Зберігаємо результати у базу даних
             finalResults.push({
                 id: id,
                 name: teamNames[id],
@@ -442,30 +435,26 @@
                 time: duration
             });
 
-            // Візуально оновлюємо стан картки на "Виконано"
             document.getElementById(`quest-${id}`).classList.add('hidden');
             document.getElementById(`box-${id}`).classList.remove('active-running');
-            document.getElementById::(`box-${id}`).classList.add('finished');
+            document.getElementById(`box-${id}`).classList.add('finished');
             document.getElementById(`done-${id}`).classList.remove('hidden');
             
-            // Динамічно міняємо заголовок на назву команди
             document.querySelector(`#box-${id} h3 span`).textContent = teamNames[id];
         }
 
-        // Логіка підрахунку місць (Сортування за часом і правильністю)
         function showFinalResults() {
             if (finalResults.length === 0) {
                 alert("Жодна команда ще не завершила квест!");
                 return;
             }
 
-            // Математичний підрахунок 2026: пріоритет - БАЛИ (більше = краще). Якщо бали рівні - ЧАС (менше = краще)
             finalResults.sort((a, b) => b.score - a.score || a.time - b.time);
             
             let html = '<div class="leaderboard-list">';
             
             finalResults.forEach((res, index) => {
-                let placeClass = `place-${index + 1}`; // Стилі для 1, 2, 3 місць
+                let placeClass = `place-${index + 1}`; 
                 let medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🎖️';
 
                 html += `
@@ -484,13 +473,11 @@
             
             document.getElementById('leaderboard').innerHTML = html;
             
-            // Плавне фокусування на результатах
             let board = document.getElementById('resultsBoard');
             board.classList.remove('hidden');
             board.scrollIntoView({ behavior: 'smooth' });
         }
 
-        /* Інклюзивні функції керування інтерфейсом (Доступність) */
         function toggleContrast() {
             document.body.classList.toggle('high-contrast');
         }
